@@ -36,10 +36,9 @@ Follow these steps to set up the analysis environment:
 4.  **Install XRootD**:
     - **macOS**: `brew install xrootd`
     - **Debian 11+/Ubuntu 22.04+**: `sudo apt install xrootd-client xrootd-server python3-xrootd`
-    - **Python Bindings**: `pip install xrootd`
-5.  **Install atlasopenmagic**:
+5.  **Install python packages**:
     ```bash
-    pip install atlasopenmagic
+    pip install xrootd atlasopenmagic
     ```
     Then, initialize from Python:
     ```python
