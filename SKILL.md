@@ -32,8 +32,9 @@ analysis_project_directory/
 1.  Environment Setup
 2.  Data Access
 3.  Signal Region Definition
-4.  Run Analysis
-5.  Review Output
+4.  Plot Data and Monte-Carlo Data
+5.  Run Analysis
+6.  Review Output
 
 ### Environment Setup
 
@@ -111,6 +112,8 @@ variables = [...]
 ### Signal Region Definition
 
 **Define Config**: Edit `config/cuts.yaml` to specify your selection (e.g., $E_T^{miss} > 150$ GeV, $n_{b-jets} == 2$).
+
+### Plot Data and Monte-Carlo Data
 
 ### Run Analysis
 
