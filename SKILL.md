@@ -5,42 +5,51 @@ description: Perform Standard Model searches and analysis using ATLAS Open Data.
 
 # Standard Model Analysis with ATLAS Open Data (sm-ana-aod)
 
-This skill provides a workflow for analyzing ATLAS Open Data to explore Standard Model physics.
+This skill provides a modular, production-ready framework for ATLAS Open Data analysis.
 
-## Overview
+## Design Philosophy
+- **Modern & Modular**: Separate data loading, selection, and plotting into reusable modules.
+- **Config-Driven**: Use YAML files to define cuts, samples, and plotting parameters.
+- **Iterative & Visual**: Output plots at each major step for validation.
+- **Extensible**: Easy to add new functions or workflows.
 
-ATLAS Open Data provides simplified datasets (in ROOT format) for educational and research purposes. This skill helps in:
-- Exploring Standard Model processes.
-- Implementing event selection criteria (cuts).
-- Calculating physical observables (invariant mass, transverse momentum, etc.).
-- Generating histograms and plots.
+## Project Structure (Recommended)
+```text
+analysis/
+├── config/
+│   ├── samples.yaml      # DID definitions, colors, labels
+│   └── cuts.yaml         # Cutflow definitions
+├── scripts/
+│   ├── processor.py      # Core analysis loop (uproot/awkward)
+│   ├── selection.py      # Physics selection functions
+│   └── plotter.py        # Modern plotting (mplhep based)
+└── main.py               # Entry point
+```
 
 ## Workflow
 
-1.  **Environment Setup**: Follow the [Environment Setup](#environment-setup) section to prepare the workspace.
-2.  **Dataset Selection**: Identify the appropriate Standard Model samples (e.g., Single Electron, Single Muon, or MC samples for Z/W bosons).
-3.  **Event Selection**: Apply selection criteria to isolate the process of interest.
-4.  **Analysis & Plotting**: Calculate variables and visualize results.
+1.  **Define Config**: Edit `config/cuts.yaml` to specify your selection (e.g., $E_T^{miss} > 150$ GeV, $n_{b-jets} == 2$).
+2.  **Run Analysis**: Execute `main.py`. The processor will:
+    - Download/Cache remote ROOT files via XRootD/HTTPS.
+    - Apply the modular selection logic.
+    - Save intermediate state for plotting.
+3.  **Review Output**: Check the generated plots (e.g., `plots/cutflow.png`, `plots/m_bb_final.png`).
 
 ## Environment Setup
 
-Follow these steps to set up the analysis environment:
+1.  **Attach to tmux session**: `tmux -S ${TMPDIR}/openclaw-tmux-sockets/openclaw.sock attach -t sm-ana-aod`
+2.  **Install dependencies**:
+    1. XRootD:
+       - macOS: `brew install xrootd`
+       - **Debian 11+/Ubuntu 22.04+**: `sudo apt install xrootd-client xrootd-server python3-xrootd`
 
-1.  **Attach to tmux session**: Ensure you are in a persistent tmux session.
-2.  **Project Directory**: Navigate to or create your project base directory.
-3.  **Python & Virtual Environment**: Ensure `python3.12` is available (install if missing).
+    2. Python packages
     ```bash
     python3.12 -m venv venv
     source venv/bin/activate
+    pip install xrootd atlasopenmagic uproot awkward vector matplotlib mplhep pyyaml tqdm
     ```
-4.  **Install XRootD**:
-    - **macOS**: `brew install xrootd`
-    - **Debian 11+/Ubuntu 22.04+**: `sudo apt install xrootd-client xrootd-server python3-xrootd`
-5.  **Install python packages**:
-    ```bash
-    pip install xrootd atlasopenmagic
-    ```
-    Then, initialize from Python:
+    3. Initialize from Python:
     ```python
     import sys
     from atlasopenmagic import install_from_environment
@@ -48,18 +57,5 @@ Follow these steps to set up the analysis environment:
     ```
 
 ## Resources
-
-### References
-
-- [ATLAS Open Data Documentation](https://opendata.atlas.cern/): Primary source for dataset information and analysis guides.
-
-### Scripts
-
-- Use Python with `uproot` for efficient data access.
-- Use `awkward-array` for handling variable-length data in ROOT files.
-
-## Guidelines
-
-- Keep analysis scripts modular.
-- Always validate the selection efficiency.
-- Compare Data with Monte Carlo (MC) predictions where possible.
+- [ATLAS Open Data](https://opendata.atlas.cern/)
+- [mplhep Documentation](https://mplhep.readthedocs.io/en/latest/) (Preferred for HEP styling)
