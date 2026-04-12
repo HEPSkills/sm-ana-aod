@@ -1,0 +1,12 @@
+{
+  "cuts": {
+    "lepton_multiplicity": {
+      "exact_count": 2,
+      "definition": "muons (provided by the 2muons skim)"
+    },
+    "mass_calculation": {
+      "method": "invariant_mass",
+      "input_vectors": ["lep_pt", "lep_eta", "lep_phi", "lep_e"]
+    }
+  }
+}

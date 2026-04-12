@@ -1,0 +1,64 @@
+{
+  "fitting": {
+    "tool": "lmfit",
+    "histogram_config": {
+      "x_min_gev": 70,
+      "x_max_gev": 110,
+      "bin_width_gev": 1
+    },
+    "model_components": {
+      "signal": {
+        "type": "breit_wigner",
+        "initial_guesses": {
+          "amplitude": "max_bin_count",
+          "center": 91.2,
+          "sigma": 2.5
+        },
+        "bounds": {
+          "amplitude": [0, "inf"],
+          "center": [85, 95],
+          "sigma": [1.0, 5.0]
+        }
+      },
+      "background": {
+        "type": "polynomial",
+        "order": 1,
+        "initial_guesses": {
+          "c0": "mean_bin_count",
+          "c1": 0
+        }
+      }
+    },
+    "fit_configuration": {
+      "combined_model": "signal + background",
+      "weights_formula": "1 / sqrt(data_x)"
+    }
+  },
+  "plotting": {
+    "layout": {
+      "type": "single_panel",
+      "x_range_gev": [70, 110],
+      "bin_width_gev": 1
+    },
+    "main_panel": {
+      "x_axis_label": "Di-lepton Mass [GeV]",
+      "y_axis_label": "Events",
+      "y_axis_scale": "log",
+      "minor_ticks": true,
+      "traces": [
+        {
+          "name": "Data",
+          "data_source": "observed_histogram",
+          "type": "scatter_error_bars",
+          "style": "black_circles"
+        },
+        {
+          "name": "Fit (Z -> mumu)",
+          "data_source": "combined_model_fit",
+          "type": "line",
+          "style": "solid_red"
+        }
+      ]
+    }
+  }
+}
