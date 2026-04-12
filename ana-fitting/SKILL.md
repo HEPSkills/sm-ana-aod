@@ -1,6 +1,6 @@
-----
+---
 name: ana-fitting
-description:
+description: Final analysis workflow for particle physics data, from caching to fitting.
 ---
 
 # Final Analysis
@@ -23,7 +23,7 @@ import os
 import requests
 from tqdm import tqdm
 
-from data_loader import *
+from data_loader import *  # Assume 'samples' is defined here
 from event_selector import *
 
 fraction = 1
@@ -74,11 +74,11 @@ for s in samples:
 
 3. **Fitting**
    - Select one fitting tool (e.g. lmfit, pyhf)
-   - Select the parameter of interests
+   - Select the parameters of interest
    - Analyse the fitting model
 
 4. **Plotting**
    - Use matplotlib and mplhep
    - Save figures to png and pdf.
-   - DO NOT plt.show() .
+   - DO NOT `plt.show()`.
 

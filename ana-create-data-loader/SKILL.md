@@ -6,7 +6,7 @@ description: Create a data loader for the analysis. This involves selecting the 
 # Online Data Access
 
 1. 💡 **Analyze User's intent and physics**
-   - What is(are) the signal process(es) of interest
+   - What is the signal process (or processes) of interest?
    - What are the main backgrounds
    - What are the key variables to discriminate signal from background and plotting
 
@@ -20,9 +20,9 @@ description: Create a data loader for the analysis. This involves selecting the 
 
 4. 📌 Search **DIDs** for signal and backgrounds
    - Skip this step if User has already provided DIDs for signal and backgrounds
-   - Example of searching $V+$jets: `python3 -c 'import atlasopenmagic as atom, json; atom.set_release("2025e-13tev-beta"); datasets = {did: atom.get_metadata(did) for did in atom.available_datasets()}; dataset = {k: {"physics_short": v.get("physics_short"), "description": v.get("description")} for k, v in datasets.items() if any(x in (v.get("physics_short") or "") for x in ["Zee", "Zmumu", "Ztautau" ,"Znunu", "Wenu", "Wmunu", "Wtaunu"])}; print(json.dumps(dataset, indent=0))'`
+   - Example of searching $V+$jets: `python3 -c 'import atlasopenmagic as atom, json; atom.set_release("2025e-13tev-beta"); datasets = {did: atom.get_metadata(did) for did in atom.available_datasets()}; dataset = {k: {"physics_short": v.get("physics_short"), "description": v.get("description")} for k, v in datasets.items() if any(x in (v.get("physics_short") or "") for x in ["Zee", "Zmumu", "Ztautau", "Znunu", "Wenu", "Wmunu", "Wtaunu"])}; print(json.dumps(dataset, indent=0))'`
 
-5. 🧮 **Select variables** for signal-background discrimination and plotting
+5. 🧮 **Select variables** for signal/background discrimination and plotting
    - Skip this step if User has already provided variables list
    - List and select: `python3 -c 'import uproot; import atlasopenmagic as atom; atom.set_release("2025e-13tev-beta"); samples = atom.build_dataset({"test": {"dids": ["301204"]}}, skim="2bjets"); url = samples["test"]["list"][0]; f = uproot.open(url); print(f["analysis"].keys())'`
 
@@ -43,9 +43,9 @@ atom.set_release(...)
 skim = ...
 
 defs = {
-    r'Data':{'dids':['data']},
-    r'Signal':  {'dids': [...],'color': "red" },
-    r'Background ...': {'dids': [...],'color':'orange'},
+    r'Data': {'dids': ['data']},
+    r'Signal': {'dids': [...], 'color': "red" },
+    r'Background ...': {'dids': [...], 'color': 'orange'},
     ...
 }
 
