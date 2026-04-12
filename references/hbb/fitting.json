@@ -1,5 +1,6 @@
 {
   "fitting": {
+    "tool": "lmfit",
     "histogram_config": {
       "x_min_gev": 20,
       "x_max_gev": 400,

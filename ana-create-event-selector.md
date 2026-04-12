@@ -1,11 +1,11 @@
 ---
 name: ana-create-event-selector
-description: Create event selection module for the signal region definition
+description: Create event selection module for the signal region definition.
 ---
 
 # Signal Region Definition
 
-Write complete event selection module to file `selection.py` and define functions for
+Write complete event selection module to file `event_selector.py` and define functions for
 - Physics observables/objects calculation (for example invariant mass etc.)
 - Selection function for each cut in the cutflow
 - Weight calculation
@@ -13,7 +13,7 @@ Write complete event selection module to file `selection.py` and define function
 Template:
 
 ```python
-# selection.py
+# event_selector.py
 
 import awkward as ak
 import numpy as np
