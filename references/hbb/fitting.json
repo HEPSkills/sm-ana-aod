@@ -1,0 +1,112 @@
+{
+  "fitting": {
+    "histogram_config": {
+      "x_min_gev": 20,
+      "x_max_gev": 400,
+      "bins": 24
+    },
+    "model_components": {
+      "signal": {
+        "type": "gaussian",
+        "initial_guesses": {
+          "amplitude": "max_bin_count",
+          "center": 125,
+          "sigma": 20
+        },
+        "bounds": {
+          "amplitude": [0, "inf"],
+          "center": [110, 140],
+          "sigma": [10, 40]
+        }
+      },
+      "background": {
+        "type": "polynomial",
+        "order": 2,
+        "initial_guesses": {
+          "b0": "mean_bin_count",
+          "b1": -1,
+          "b2": 0.01
+        },
+        "bounds": {
+          "b0": ["-inf", "inf"],
+          "b1": ["-inf", "inf"],
+          "b2": ["-inf", "inf"]
+        }
+      }
+    },
+    "fit_configuration": {
+      "combined_model": "signal + background",
+      "weights_formula": "sqrt(data_counts + 1)"
+    }
+  },
+  "plotting": {
+    "layout": {
+      "type": "stacked_panels",
+      "top_panel_fraction": 0.75,
+      "bottom_panel_fraction": 0.25,
+      "x_range_gev": [20, 500],
+      "bin_width_gev": 20
+    },
+    "main_panel": {
+      "y_axis_label": "Events / 20 GeV",
+      "y_axis_scale": "linear",
+      "traces": [
+        {
+          "name": "Data",
+          "data_source": "observed_histogram",
+          "type": "scatter_error_bars",
+          "style": "black_circles"
+        },
+        {
+          "name": "Backgrounds",
+          "data_source": "MC_samples",
+          "type": "stacked_histogram",
+          "components": [
+            {"name": "Background Diboson", "color": "grey"},
+            {"name": "Background V+jets", "color": "blue"},
+            {"name": "Background Single top", "color": "orange"},
+            {"name": "Background ttbar", "color": "yellow"}
+          ]
+        },
+        {
+          "name": "Signal (m_H = 125 GeV) x 5",
+          "data_source": "signal_MC",
+          "type": "line_step",
+          "style": "solid_red",
+          "scaling_factor": 5
+        },
+        {
+          "name": "Fit Peak",
+          "data_source": "combined_model_fit",
+          "type": "line",
+          "style": "dashed_blue"
+        },
+        {
+          "name": "Stat. Unc.",
+          "data_source": "mc_statistical_uncertainty",
+          "type": "error_band",
+          "style": "hatched_transparent"
+        }
+      ]
+    },
+    "residual_panel": {
+      "x_axis_label": "m_bb [GeV]",
+      "y_axis_label": "Data/Pred.",
+      "y_axis_range": [0.4, 1.6],
+      "traces": [
+        {
+          "name": "Ratio",
+          "data_source": "Data / (MC_Background + Signal)",
+          "type": "scatter_error_bars",
+          "style": "black_circles"
+        },
+        {
+          "name": "Error Band",
+          "data_source": "MC_uncertainty / MC_total",
+          "type": "shaded_area",
+          "style": "grey_hatched_transparent"
+        }
+      ]
+    }
+  }
+}

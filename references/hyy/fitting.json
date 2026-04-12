@@ -1,0 +1,97 @@
+{
+  "fitting": {
+    "histogram_config": {
+      "x_min_gev": 100,
+      "x_max_gev": 160,
+      "bin_width_gev": 1
+    },
+    "model_components": {
+      "background": {
+        "type": "polynomial",
+        "order": 4,
+        "initial_guesses": {
+          "c0": "max_bin_count",
+          "c1": 0,
+          "c2": 0,
+          "c3": 0,
+          "c4": 0
+        }
+      },
+      "signal": {
+        "type": "gaussian",
+        "initial_guesses": {
+          "amplitude": 100,
+          "center": 125,
+          "sigma": 2
+        }
+      }
+    },
+    "fit_configuration": {
+      "combined_model": "background + signal",
+      "weights_formula": "1 / sqrt(data_x)"
+    }
+  },
+  "plotting": {
+    "layout": {
+      "type": "stacked_panels",
+      "top_panel_fraction": 0.65,
+      "bottom_panel_fraction": 0.20,
+      "x_range_gev": [100, 160]
+    },
+    "main_panel": {
+      "y_axis_label": "Events / 1 GeV",
+      "traces": [
+        {
+          "name": "Data",
+          "data_source": "observed_histogram",
+          "type": "scatter_error_bars",
+          "style": "black_circles"
+        },
+        {
+          "name": "Sig+Bkg Fit (m_H=125 GeV)",
+          "data_source": "combined_model_fit",
+          "type": "line",
+          "style": "solid_red"
+        },
+        {
+          "name": "Bkg (4th order polynomial)",
+          "data_source": "background_model_fit",
+          "type": "line",
+          "style": "dashed_red"
+        }
+      ],
+      "text_annotations": [
+        "ATLAS Open Data",
+        "for education",
+        "sqrt(s)=13 TeV, Int(L)dt = 36.1 fb^-1",
+        "H -> gamma gamma"
+      ],
+      "legend_position": "lower left"
+    },
+    "residual_panel": {
+      "x_axis_label": "di-photon invariant mass m_yy [GeV]",
+      "y_axis_label": "Events-Bkg",
+      "y_axis_symmetric": true,
+      "traces": [
+        {
+          "name": "Data - Background",
+          "data_source": "data_x - background",
+          "type": "scatter_error_bars",
+          "style": "black_circles"
+        },
+        {
+          "name": "Signal Fit",
+          "data_source": "combined_fit - background",
+          "type": "line",
+          "style": "solid_red"
+        },
+        {
+          "name": "Zero Reference",
+          "data_source": "background - background",
+          "type": "line",
+          "style": "dashed_red"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "cuts": {
+    "reconstruction_quality": {
+      "variable": "photon_isTightID",
+      "condition": "==",
+      "value": true,
+      "apply_to": "both_photons"
+    },
+    "kinematics_pt": {
+      "variable": "photon_pt",
+      "leading_min_gev": 50,
+      "subleading_min_gev": 30
+    },
+    "calorimeter_isolation": {
+      "variable": ["photon_ptcone20", "photon_pt"],
+      "calculation": "photon_ptcone20 / photon_pt",
+      "condition": "<",
+      "threshold": 0.055,
+      "apply_to": "both_photons"
+    },
+    "eta_transition_region": {
+      "variable": "photon_eta",
+      "action": "exclude_abs_range",
+      "range": [1.37, 1.52],
+      "apply_to": "both_photons"
+    },
+    "mass_calculation": {
+      "method": "invariant_mass",
+      "input_vectors": ["photon_pt", "photon_eta", "photon_phi", "photon_e"],
+      "validity_cut": "!= 0"
+    },
+    "mass_based_isolation": {
+      "variable": ["photon_pt", "invariant_mass"],
+      "calculation": "photon_pt / invariant_mass",
+      "condition": ">",
+      "threshold": 0.35,
+      "apply_to": "both_photons"
+    }
+  }
+}

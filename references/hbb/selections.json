@@ -1,0 +1,66 @@
+{
+  "cuts": {
+    "trigger": {
+      "variable": "trigMET",
+      "condition": "==",
+      "value": true
+    },
+    "missing_transverse_energy": {
+      "variable": "met",
+      "condition": ">",
+      "value_gev": 150
+    },
+    "jet_multiplicity": {
+      "allowed_count": [2, 3],
+      "definition": {
+        "cjet": {"jvt": 1, "pt_min_gev": 20, "abs_eta_max": 2.5},
+        "fjet": {"jvt": 1, "pt_min_gev": 30, "abs_eta_range": [2.5, 4.5]}
+      }
+    },
+    "b_tagging": {
+      "variable": "jet_btag_quantile",
+      "condition": ">=",
+      "threshold": 4,
+      "exact_count": 2,
+      "leading_jet_pt_min_gev": 45
+    },
+    "lepton_veto": {
+      "exact_count": 0,
+      "definition": "loose electrons (type 11) and muons (type 13)"
+    },
+    "scalar_sum_pt_ht": {
+      "calculation": "sum(jet_pt) for cjets and fjets",
+      "condition_2_jets": "> 120",
+      "condition_3_jets": "> 150"
+    },
+    "angular_bjets_phi": {
+      "variable": "delta_phi(bjet1, bjet2)",
+      "condition": "<",
+      "value_deg": 140
+    },
+    "angular_met_bb_phi": {
+      "variable": "delta_phi(met, sum(bjets))",
+      "condition": ">",
+      "value_deg": 120
+    },
+    "angular_min_met_jets_phi": {
+      "variable": "min(delta_phi(met, any_jet))",
+      "condition_2_jets": "> 20",
+      "condition_3_jets": "> 30"
+    },
+    "mass_calculation": {
+      "method": "invariant_mass",
+      "input_vectors": ["jet_pt", "jet_eta", "jet_phi", "jet_e"],
+      "energy_correction": "PtReco correction applied based on jet_pt (<100 GeV vs >=100 GeV)"
+    }
+  },
+  "mc_weighting": {
+    "luminosity": {
+      "value": 36.1,
+      "unit": "fb^-1",
+      "conversion_factor": 1000
+    },
+    "weight_formula": "(lumi * 1000 * xsec * mcWeight * ScaleFactor_PILEUP * ScaleFactor_FTAG * ScaleFactor_JVT * filteff * kfac) / sum_of_weights",
+    "apply_to": "All MC Background and Signal samples"
+  }
+}

@@ -9,7 +9,7 @@ This skill provides a modular, production-ready Standard Operating Procedure for
 
 ## Key Requirments
 
-- **Code Centralization:** Save every analysis **scripts** and **outputs** in the analysisProjectDir, NOT in ${baseDir}
+- **Code Centralization:** Save every analysis **scripts** and **outputs** in the /home/agent/analysis/, NOT in ${baseDir}
 - **Log to file**: When running scripts/commands, use `tee` to save the log to loacal file.
 
 **Code Style**
@@ -21,7 +21,7 @@ This skill provides a modular, production-ready Standard Operating Procedure for
 
 ## Project Structure
 ```text
-analysisProjectDir/
+home/agent/analysis/
 ├── config/
 │   ├── samples.yaml      		# DID definitions, colors, labels
 │   └── cuts.yaml         		# Cutflow definitions
@@ -41,7 +41,7 @@ analysisProjectDir/
 2. 🛠️ **Install dependencies**:
    1. XRootD:
       - macOS: `brew install xrootd`
-      - **Debian 11+/Ubuntu 22.04+**: `sudo apt install xrootd-client xrootd-server python3-xrootd`
+      - **Debian 11+/Ubuntu 22.04+**: `sudo apt install build-essential xrootd-client xrootd-server python3-xrootd`
 
    2. Python packages
    ```bash
@@ -56,7 +56,7 @@ analysisProjectDir/
    install_from_environment()
    ```
 
-Notes:
+   Notes:
 
 - Use venv with **python3.12**
 
