@@ -1,0 +1,112 @@
+{
+  "fitting": {
+    "tool": "lmfit",
+    "histogram_config": {
+      "x_min_gev": 110,
+      "x_max_gev": 160,
+      "bin_width_gev": 2
+    },
+    "model_components": {
+      "background": {
+        "type": "polynomial",
+        "order": 3,
+        "initial_guesses": {
+          "c0": "max_bin_count",
+          "c1": -10,
+          "c2": 0.5,
+          "c3": -0.01
+        }
+      },
+      "signal": {
+        "type": "gaussian",
+        "initial_guesses": {
+          "amplitude": 50,
+          "center": 125.0,
+          "sigma": 2.5
+        },
+        "bounds": {
+          "amplitude": [0, "inf"],
+          "center": [123.0, 127.0],
+          "sigma": [1.5, 4.0]
+        }
+      }
+    },
+    "fit_configuration": {
+      "combined_model": "background + signal",
+      "weights_formula": "1 / sqrt(data_x)"
+    }
+  },
+  "plotting": {
+    "layout": {
+      "type": "stacked_panels",
+      "top_panel_fraction": 0.70,
+      "bottom_panel_fraction": 0.30,
+      "x_range_gev": [110, 160],
+      "bin_width_gev": 2
+    },
+    "main_panel": {
+      "y_axis_label": "Events / 2 GeV",
+      "y_axis_scale": "linear",
+      "minor_ticks": true,
+      "traces": [
+        {
+          "name": "Data",
+          "data_source": "observed_histogram",
+          "type": "scatter_error_bars",
+          "style": "black_circles"
+        },
+        {
+          "name": "Sig+Bkg Fit (m_H=125 GeV)",
+          "data_source": "combined_model_fit",
+          "type": "line",
+          "style": "solid_red"
+        },
+        {
+          "name": "Bkg Fit (3rd order poly)",
+          "data_source": "background_model_fit",
+          "type": "line",
+          "style": "dashed_red"
+        },
+        {
+          "name": "Higgs MC * 100 (Reference)",
+          "data_source": "signal_MC",
+          "type": "line_step",
+          "style": "solid_purple",
+          "scaling_factor": 100
+        }
+      ],
+      "text_annotations": [
+        "ATLAS Open Data",
+        "for education",
+        "sqrt(s)=13 TeV, 36 fb^-1",
+        "H -> mu^+ mu^-"
+      ]
+    },
+    "residual_panel": {
+      "x_axis_label": "Di-muon invariant mass m_mumu [GeV]",
+      "y_axis_label": "Data - Bkg",
+      "y_axis_symmetric": true,
+      "minor_ticks": true,
+      "traces": [
+        {
+          "name": "Data - Background",
+          "data_source": "data_x - background_model_fit",
+          "type": "scatter_error_bars",
+          "style": "black_circles"
+        },
+        {
+          "name": "Signal Fit",
+          "data_source": "combined_model_fit - background_model_fit",
+          "type": "line",
+          "style": "solid_red"
+        },
+        {
+          "name": "Zero Reference",
+          "data_source": "0.0",
+          "type": "line",
+          "style": "dashed_red"
+        }
+      ]
+    }
+  }
+}

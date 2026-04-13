@@ -1,0 +1,85 @@
+{
+  "cuts": {
+    "trigger": {
+      "variable": "trigM",
+      "condition": "==",
+      "value": true
+    },
+    "trigger_matching": {
+      "variable": "lep_isTrigMatched",
+      "condition": ">=",
+      "matched_count": 1
+    },
+    "lepton_multiplicity": {
+      "variable": "lep_n",
+      "exact_count": 2
+    },
+    "missing_transverse_energy": {
+      "variable": "met",
+      "condition": "<=",
+      "value_gev": 80
+    },
+    "lepton_flavor": {
+      "variable": "lep_type",
+      "condition": "==",
+      "value": 13,
+      "exact_count": 2
+    },
+    "lepton_kinematics_pt": {
+      "variable": "lep_pt",
+      "condition": ">",
+      "value_gev": 30,
+      "min_count": 2
+    },
+    "opposite_charge": {
+      "calculation": "sum(lep_charge)",
+      "condition": "==",
+      "value": 0
+    },
+    "lepton_id_iso": {
+      "id_variable": "lep_isMediumID",
+      "iso_variable": "lep_isLooseIso",
+      "condition": ">",
+      "passing_count": 1
+    },
+    "jet_selection": {
+      "energy_min_gev": 30,
+      "pt_min_gev": 30,
+      "min_jet_count": 2,
+      "b_tagging_veto": {
+        "variable": "jet_btag_quantile",
+        "condition": ">=",
+        "threshold": 3,
+        "max_allowed": 0
+      }
+    },
+    "angular_isolation_dr": {
+      "calculation": "delta_R(jet, lepton)",
+      "condition": ">=",
+      "value": 0.4,
+      "apply_to": "both_muons"
+    },
+    "vbf_topology": {
+      "dijet_mass_min_gev": 500,
+      "delta_eta_min": 3,
+      "opposite_hemisphere": {
+        "calculation": "eta_j1 * eta_j2",
+        "condition": "<",
+        "value": 0
+      }
+    },
+    "mass_calculation": {
+      "method": "invariant_mass",
+      "input_vectors": ["lep_e", "lep_pt", "lep_eta", "lep_phi"]
+    }
+  },
+  "mc_weighting": {
+    "luminosity": {
+      "value": 36.0,
+      "unit": "fb^-1",
+      "conversion_factor": 1000
+    },
+    "weight_formula": "(ScaleFactor_MUON * ScaleFactor_MuTRIGGER * ScaleFactor_PILEUP * ScaleFactor_FTAG) * (mcWeight / sum_of_weights) * (xsec * filteff * kfac * lumi * 1000)",
+    "apply_to": "All MC Background and Signal samples"
+  }
+}
