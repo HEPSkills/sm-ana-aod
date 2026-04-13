@@ -16,8 +16,8 @@ Follow the steps below (## Install dependencies) to set up the environment for a
 2. Install Python Packages
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
+python3 -m venv $HOME/.venv
+source $HOME/.venv/bin/activate
 pip install xrootd atlasopenmagic uproot awkward vector matplotlib mplhep pyyaml tqdm
 ```
 
