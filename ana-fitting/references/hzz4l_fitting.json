@@ -1,0 +1,117 @@
+{
+  "fitting": {
+    "tool": "lmfit",
+    "histogram_config": {
+      "x_min_gev": 110,
+      "x_max_gev": 140,
+      "bin_width_gev": 2.5
+    },
+    "model_components": {
+      "signal": {
+        "type": "gaussian",
+        "description": "Higgs boson mass peak fit",
+        "initial_guesses": {
+          "amplitude": 10,
+          "center": 125.0,
+          "sigma": 2.0
+        },
+        "bounds": {
+          "amplitude": [0, "inf"],
+          "center": [123.0, 127.0],
+          "sigma": [1.0, 5.0]
+        }
+      },
+      "background": {
+        "type": "polynomial",
+        "order": 2,
+        "description": "Smooth continuum background, primarily from non-resonant ZZ*",
+        "initial_guesses": {
+          "c0": "mean_bin_count",
+          "c1": -0.05,
+          "c2": 0.0001
+        }
+      }
+    },
+    "fit_configuration": {
+      "combined_model": "signal + background",
+      "weights_formula": "1 / sqrt(data_x + 1)"
+    }
+  },
+  "plotting": {
+    "layout": {
+      "type": "stacked_panels",
+      "top_panel_fraction": 0.75,
+      "bottom_panel_fraction": 0.25,
+      "x_range_gev": [80, 250],
+      "bin_width_gev": 2.5
+    },
+    "main_panel": {
+      "x_axis_label": "4-lepton invariant mass m_{4l} [GeV]",
+      "y_axis_label": "Events / 2.5 GeV",
+      "y_axis_scale": "linear",
+      "minor_ticks": true,
+      "traces": [
+        {
+          "name": "Data",
+          "data_source": "observed_histogram",
+          "type": "scatter_error_bars",
+          "style": "black_circles"
+        },
+        {
+          "name": "Backgrounds",
+          "data_source": "MC_samples",
+          "type": "stacked_histogram",
+          "components": [
+            {"name": "Background Z, ttbar, ttbar+V, VVV", "color": "#6b59d3"},
+            {"name": "Background ZZ*", "color": "#ff0000"}
+          ]
+        },
+        {
+          "name": "Signal (m_H = 125 GeV)",
+          "data_source": "signal_MC",
+          "type": "stacked_histogram",
+          "color": "#00cdff"
+        },
+        {
+          "name": "Stat. Unc.",
+          "data_source": "mc_statistical_uncertainty",
+          "type": "error_band",
+          "style": "hatched_transparent"
+        },
+        {
+          "name": "Higgs Peak Fit",
+          "data_source": "combined_model_fit",
+          "type": "line",
+          "style": "dashed_blue",
+          "x_range_gev": [110, 140]
+        }
+      ],
+      "text_annotations": [
+        "ATLAS Open Data",
+        "for education",
+        "\\sqrt{s}=13 TeV, \\int L dt = 36.6 fb^{-1}",
+        "H \\rightarrow ZZ^* \\rightarrow 4\\ell"
+      ]
+    },
+    "residual_panel": {
+      "x_axis_label": "m_{4l} [GeV]",
+      "y_axis_label": "Data / Pred.",
+      "y_axis_range": [0.0, 2.0],
+      "minor_ticks": true,
+      "traces": [
+        {
+          "name": "Ratio",
+          "data_source": "Data / (MC_Background + Signal)",
+          "type": "scatter_error_bars",
+          "style": "black_circles"
+        },
+        {
+          "name": "Unity Reference",
+          "data_source": "1.0",
+          "type": "line",
+          "style": "dashed_grey"
+        }
+      ]
+    }
+  }
+}

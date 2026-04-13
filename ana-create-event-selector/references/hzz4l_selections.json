@@ -1,0 +1,53 @@
+{
+  "cuts": {
+    "trigger": {
+      "variable": ["trigE", "trigM"],
+      "condition": "OR",
+      "value": true
+    },
+    "trigger_matching": {
+      "variable": "lep_isTrigMatched",
+      "condition": ">=",
+      "matched_count": 1
+    },
+    "lepton_kinematics_pt_hierarchy": {
+      "variables": ["leading_lep_pt", "sub_leading_lep_pt", "third_leading_lep_pt"],
+      "conditions": {
+        "leading": "> 20",
+        "sub_leading": "> 15",
+        "third_leading": "> 10"
+      }
+    },
+    "lepton_id_iso": {
+      "description": "Flavor-dependent ID and Isolation",
+      "method": "ID_iso_cut",
+      "electron_requirements": {"id": "lep_isLooseID", "iso": "lep_isLooseIso"},
+      "muon_requirements": {"id": "lep_isMediumID", "iso": "lep_isLooseIso"},
+      "passing_count": 4
+    },
+    "lepton_flavor_composition": {
+      "calculation": "sum(lep_type) over 4 leptons",
+      "allowed_values": [44, 48, 52],
+      "description": "Selects 4e (11x4), 2e2mu (11x2+13x2), or 4mu (13x4)"
+    },
+    "total_charge": {
+      "calculation": "sum(lep_charge)",
+      "condition": "==",
+      "value": 0
+    },
+    "mass_calculation": {
+      "method": "invariant_mass",
+      "input_vectors": ["lep_pt", "lep_eta", "lep_phi", "lep_e"],
+      "output_variable": "mass"
+    }
+  },
+  "mc_weighting": {
+    "luminosity": {
+      "value": 36.6,
+      "unit": "fb^-1",
+      "conversion_factor": 1000
+    },
+    "weight_formula": "(lumi * 1000 / sum_of_weights) * filteff * kfac * xsec * mcWeight * ScaleFactor_PILEUP * ScaleFactor_ELE * ScaleFactor_MUON * ScaleFactor_LepTRIGGER",
+    "apply_to": "All MC Background and Signal samples"
+  }
+}
