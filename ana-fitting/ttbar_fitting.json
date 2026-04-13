@@ -1,0 +1,110 @@
+{
+  "fitting": {
+    "tool": "lmfit",
+    "histogram_config": {
+      "target_variable": "m_jjj",
+      "x_min_gev": 100,
+      "x_max_gev": 250,
+      "bin_width_gev": 3
+    },
+    "model_components": {
+      "signal": {
+        "type": "gaussian",
+        "description": "Top quark mass peak fit",
+        "initial_guesses": {
+          "amplitude": "max_bin_count",
+          "center": 172.5,
+          "sigma": 15
+        },
+        "bounds": {
+          "amplitude": [0, "inf"],
+          "center": [160, 185],
+          "sigma": [5, 40]
+        }
+      },
+      "background": {
+        "type": "polynomial",
+        "order": 2,
+        "initial_guesses": {
+          "c0": "mean_bin_count",
+          "c1": -0.1,
+          "c2": 0.001
+        }
+      }
+    },
+    "fit_configuration": {
+      "combined_model": "signal + background",
+      "weights_formula": "1 / sqrt(data_x)"
+    }
+  },
+  "plotting": {
+    "layout": {
+      "type": "stacked_panels",
+      "top_panel_fraction": 0.75,
+      "bottom_panel_fraction": 0.25,
+      "x_range_gev": [100, 250],
+      "bin_width_gev": 3
+    },
+    "main_panel": {
+      "y_axis_label": "Events",
+      "y_axis_scale": "linear",
+      "minor_ticks": true,
+      "traces": [
+        {
+          "name": "Data",
+          "data_source": "observed_histogram",
+          "type": "scatter_error_bars",
+          "style": "black_circles"
+        },
+        {
+          "name": "Backgrounds and Signal",
+          "data_source": "MC_samples",
+          "type": "stacked_histogram",
+          "components": [
+            {"name": "Diboson", "color": "blue"},
+            {"name": "Single top", "color": "cyan"},
+            {"name": "t\\bar{t}", "color": "orange"}
+          ]
+        },
+        {
+          "name": "Stat. Unc.",
+          "data_source": "mc_statistical_uncertainty",
+          "type": "error_band",
+          "style": "hatched_transparent"
+        },
+        {
+          "name": "Top Mass Fit",
+          "data_source": "combined_model_fit",
+          "type": "line",
+          "style": "dashed_red"
+        }
+      ],
+      "text_annotations": [
+        "ATLAS Open Data",
+        "for education",
+        "sqrt(s)=13 TeV, 36 fb^-1",
+        "t\\bar{t} -> \\ell \\nu b\\bar{b} q\\bar{q}"
+      ]
+    },
+    "residual_panel": {
+      "x_axis_label": "m_{jjj} [GeV]",
+      "y_axis_label": "Ratio (Data/MC)",
+      "y_axis_range": [0.5, 1.5],
+      "minor_ticks": true,
+      "traces": [
+        {
+          "name": "Ratio",
+          "data_source": "Data / MC_Total",
+          "type": "scatter_error_bars",
+          "style": "black_circles"
+        },
+        {
+          "name": "Unity Reference",
+          "data_source": "1.0",
+          "type": "line",
+          "style": "dashed_red"
+        }
+      ]
+    }
+  }
+}

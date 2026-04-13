@@ -1,0 +1,63 @@
+{
+  "cuts": {
+    "trigger": {
+      "variable": ["trigE", "trigM"],
+      "condition": "OR",
+      "value": true
+    },
+    "trigger_matching": {
+      "variable": "lep_isTrigMatched",
+      "condition": "==",
+      "value": true
+    },
+    "lepton_multiplicity": {
+      "variable": "lep_n",
+      "exact_count": 1
+    },
+    "lepton_kinematics_pt": {
+      "variable": "lep_pt",
+      "condition": ">=",
+      "value_gev": 30
+    },
+    "missing_transverse_energy": {
+      "variable": "met",
+      "condition": ">=",
+      "value_gev": 30
+    },
+    "w_boson_transverse_mass": {
+      "calculation": "sqrt(2 * lep_pt * met * (1 - cos(lep_phi - met_phi)))",
+      "condition": ">=",
+      "value_gev": 30
+    },
+    "jet_multiplicity": {
+      "variable": "jet_pt",
+      "condition": ">=",
+      "threshold_gev": 30,
+      "min_count": 4
+    },
+    "b_tagging": {
+      "variable": "jet_btag_quantile",
+      "condition": ">=",
+      "threshold": 4,
+      "min_count": 2
+    },
+    "mass_calculation": {
+      "method": "top_mass_reconstruction",
+      "components": {
+        "m_jjj": "Invariant mass of hadronic top (best W-mass matched non-b-jet pair + farthest b-jet)",
+        "m_lvb": "Invariant mass of leptonic top (lepton + neutrino(MET) + closest b-jet, averaged/flattened over pz solutions)"
+      }
+    }
+  },
+  "mc_weighting": {
+    "luminosity": {
+      "value": 36000,
+      "unit": "pb^-1"
+    },
+    "weight_formula": {
+      "base": "(ScaleFactor_PILEUP * ScaleFactor_FTAG * mcWeight / sum_of_weights) * lumi * xsec * kfac * filteff",
+      "lepton_dependent": "if lep_type == 11 (electron): base * ScaleFactor_ELE * ScaleFactor_ElTRIGGER, else (muon): base * ScaleFactor_MUON * ScaleFactor_MuTRIGGER"
+    },
+    "apply_to": "All MC Background and Signal samples (Weight divided by 2 for m_lvb quadratic solutions)"
+  }
+}
