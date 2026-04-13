@@ -1,0 +1,74 @@
+{
+  "cuts": {
+    "trigger": {
+      "variable": ["trigDE", "trigDM"],
+      "condition": "OR",
+      "value": true
+    },
+    "trigger_matching": {
+      "variable": "TriggerMatch_DILEPTON",
+      "condition": "==",
+      "value": 1
+    },
+    "lepton_multiplicity": {
+      "variable": "lep_n",
+      "exact_count": 3
+    },
+    "missing_transverse_energy": {
+      "variable": "met",
+      "condition": ">",
+      "value_gev": 30
+    },
+    "lepton_kinematics_pt": {
+      "variable": "lep_pt",
+      "min_count_20_gev": 3,
+      "min_count_25_gev": 1
+    },
+    "lepton_id_iso": {
+      "id_variable": "lep_isTightID",
+      "iso_variable": "lep_isLooseIso",
+      "condition": "AND",
+      "passing_count": "> 2"
+    },
+    "lepton_track_isolation": {
+      "variable": ["lep_ptvarcone30", "lep_pt"],
+      "calculation": "abs(lep_ptvarcone30 / lep_pt)",
+      "condition": "<",
+      "threshold": 0.15,
+      "passing_count": "> 2"
+    },
+    "lepton_calorimeter_isolation": {
+      "variable": ["lep_topoetcone20", "lep_pt"],
+      "calculation": "abs(lep_topoetcone20 / lep_pt)",
+      "condition": "<",
+      "threshold": 0.15,
+      "passing_count": "> 2"
+    },
+    "sfos_pair_selection": {
+      "description": "Require at least one Same-Flavor Opposite-Sign (SFOS) lepton pair",
+      "flavor_variable": "lep_type",
+      "charge_variable": "lep_charge"
+    },
+    "z_boson_reconstruction": {
+      "method": "closest_sfos_pair_mass",
+      "target_mass_gev": 91.0,
+      "mass_window_gev": [81.0, 101.0]
+    },
+    "w_boson_reconstruction": {
+      "method": "transverse_mass",
+      "lepton_source": "unpaired_lepton",
+      "calculation": "sqrt((lep_pt + met_et)^2 - ((lep_px + met_px)^2 + (lep_py + met_py)^2))",
+      "condition": ">",
+      "value_gev": 30
+    }
+  },
+  "mc_weighting": {
+    "luminosity": {
+      "value": 36.6,
+      "unit": "fb^-1",
+      "conversion_factor": 1000
+    },
+    "weight_formula": "(mcWeight * ScaleFactor_PILEUP * ScaleFactor_ELE * ScaleFactor_MUON * ScaleFactor_MLTRIGGER * xsec * kfac * filteff * lumi * 1000) / sum_of_weights",
+    "apply_to": "All MC Background and Signal samples"
+  }
+}
