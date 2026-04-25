@@ -5,7 +5,9 @@ description: Use this skill when you need to initialize or troubleshoot the loca
 
 # Setup the environment
 
-Follow the steps below (## Install dependencies) to set up the environment for analysis.
+Recommended python version: 3.12
+
+If no virtual environment `$HOME/.ana-venv`, follow the steps in (## Install dependencies) to set up the environment for analysis.
 
 ## Install dependencies
 
