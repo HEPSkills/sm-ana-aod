@@ -1,0 +1,9 @@
+{
+  "release": "2025e-13tev-beta",
+  "skim": "GamGam",
+  "defs": {
+      'Data': {'dids': ['data']}
+  },
+  "tree_name": "analysis",
+  "variables": ["photon_pt", "photon_eta", "photon_phi", "photon_e", "photon_isTightID", "photon_ptcone20"]
+}

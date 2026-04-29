@@ -1,0 +1,13 @@
+{
+  "release": "2025e-13tev-beta",
+  "skim": "2muons",
+  "defs": {
+      "Data": {"dids": ["data"]},
+      "Signal Higgs": {"dids": [345106, 345098, 345097], "color": "purple"},
+      "Background mu_mu": {"dids": [700323, 700324, 700325], "color": "orange"},
+      "Background ttbar": {"dids": [410470], "color": "cyan"}
+  },
+  "tree_name": "analysis",
+  "variables": ["trigM", "lep_isTrigMatched", "lep_n", "met", "lep_type", "lep_pt", "lep_charge", "lep_isMediumID", "lep_isLooseIso", "jet_e", "jet_pt", "jet_btag_quantile", "jet_eta", "jet_phi", "lep_eta", "lep_phi", "lep_e"],
+  "weight_variables": ["ScaleFactor_MUON", "ScaleFactor_MuTRIGGER", "ScaleFactor_PILEUP", "ScaleFactor_FTAG", "mcWeight", "sum_of_weights", "xsec", "filteff", "kfac"]
+}

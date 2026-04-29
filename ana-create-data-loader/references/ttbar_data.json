@@ -1,0 +1,13 @@
+{
+  "release": "2025e-13tev-beta",
+  "skim": "1LMET30",
+  "defs": {
+      "Data": {"dids": ["data"]},
+      "Signal ttbar": {"dids": [601495, 410081, 410470], "color": "orange"},
+      "Background single_top": {"dids": [601355, 601487, 601627, 601628, 601631, 601761, 601762, 601763, 601764], "color": "cyan"},
+      "Background diboson": {"dids": [700488, 700489, 700490, 700491, 700492, 700493, 700495, 700496], "color": "blue"}
+  },
+  "tree_name": "analysis",
+  "variables": ["trigE", "trigM", "lep_isTrigMatched", "lep_n", "lep_pt", "lep_eta", "lep_phi", "lep_e", "lep_type", "met", "met_phi", "jet_n", "jet_pt", "jet_eta", "jet_phi", "jet_e", "jet_btag_quantile"],
+  "weight_variables": ["mcWeight", "ScaleFactor_ElTRIGGER", "ScaleFactor_MuTRIGGER", "ScaleFactor_FTAG", "ScaleFactor_ELE", "ScaleFactor_MUON", "ScaleFactor_PILEUP", "sum_of_weights", "xsec", "filteff", "kfac"]
+}
