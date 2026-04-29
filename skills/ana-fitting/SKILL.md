@@ -82,3 +82,16 @@ for s in samples:
    - Save figures to png and pdf.
    - DO NOT `plt.show()`.
 
+## References
+
+Read fitting metadata from these files
+
+```
+references/hbb_fitting.json
+references/hmumu_fitting.json
+references/hyy_fitting.json
+references/hzz4l_fitting.json
+references/ttbar_fitting.json
+references/wz3l_fitting.json
+references/z_mumu_fitting.json
+```

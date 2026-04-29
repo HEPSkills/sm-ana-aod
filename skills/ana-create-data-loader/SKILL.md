@@ -56,3 +56,18 @@ samples = atom.build_dataset(defs, skim=skim, protocol='https', cache=False)
 variables = [...]
 
 ```
+
+## References
+
+Read release, skim, defs, tree_name, variables, weight_variables from these files:
+
+```
+references/hbb_data.json
+references/hmumu_data.json
+references/hyy_data.json
+references/hzz4l_data.json
+references/ttbar_data.json
+references/wz3l_data.json
+references/z_mumu_data.json
+```
+

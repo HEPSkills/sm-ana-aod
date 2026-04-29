@@ -94,3 +94,17 @@ def select_zero_leptons(data):
 
 ...
 ```
+
+## References
+
+Read cuts from these files
+
+```
+references/hbb_selections.json
+references/hmumu_selections.json
+references/hyy_selections.json
+references/hzz4l_selections.json
+references/ttbar_selections.json
+references/wz3l_selections.json
+references/z_mumu_selections.json
+```
