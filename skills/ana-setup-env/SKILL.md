@@ -20,7 +20,7 @@ If no virtual environment `$HOME/.ana-venv`, follow the steps in (## Install dep
 ```bash
 python3 -m venv $HOME/.ana-venv
 source $HOME/.ana-venv/bin/activate
-pip install xrootd atlasopenmagic uproot awkward vector matplotlib mplhep pyyaml tqdm
+pip install xrootd atlasopenmagic uproot awkward vector matplotlib mplhep pyyaml tqdm 'pyhf[backends]'
 ```
 
 3. Initialize from Python: `python3 -c "import sys; from atlasopenmagic import install_from_environment; install_from_environment()"`

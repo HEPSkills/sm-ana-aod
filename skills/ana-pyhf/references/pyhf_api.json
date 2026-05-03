@@ -1,0 +1,89 @@
+{
+  "model_creation": {
+    "simple": {
+      "uncorrelated_background": "pyhf.simplemodels.uncorrelated_background(signal, bkg, bkg_uncertainty)",
+      "note": "generates single multi-bin channel; signal strength mu is the POI; one gamma nuisance per bin"
+    },
+    "from_workspace": {
+      "load": "pyhf.Workspace(spec)",
+      "build_model": "ws.model()",
+      "build_model_with_patch": "ws.model(patches=[patch])",
+      "build_model_batched": "ws.model(batch_size=npars)"
+    }
+  },
+  "model_config": {
+    "parameters": "model.config.parameters",
+    "par_order": "model.config.par_order",
+    "suggested_init": "model.config.suggested_init()",
+    "suggested_bounds": "model.config.suggested_bounds()",
+    "suggested_fixed": "model.config.suggested_fixed()",
+    "poi_index": "model.config.poi_index",
+    "par_slice": "model.config.par_slice(k)",
+    "param_set": "model.config.param_set(k)",
+    "auxdata": "model.config.auxdata"
+  },
+  "param_set_attrs": {
+    "constrained": "model.config.param_set(k).constrained",
+    "suggested_init": "model.config.param_set(k).suggested_init",
+    "width": "model.config.param_set(k).width()"
+  },
+  "expected_data": {
+    "full": "model.expected_data(pars)",
+    "actual_only": "model.expected_actualdata(pars)",
+    "aux_only": "model.expected_auxdata(pars)",
+    "logpdf": "model.logpdf(pars, data)"
+  },
+  "workspace": {
+    "data_with_aux": "ws.data(model)",
+    "data_no_aux": "ws.data(model, include_auxdata=False)",
+    "get_measurement": "ws.get_measurement(measurement_name=None, measurement_index=None)",
+    "channels": "ws.channels",
+    "channel_nbins": "ws.channel_nbins",
+    "samples": "ws.samples",
+    "modifiers": "ws.modifiers",
+    "measurement_names": "ws.measurement_names",
+    "rename": "ws.rename(channels={}, modifiers={}, measurements={})",
+    "combine": "pyhf.Workspace.combine(ws1, ws2)"
+  },
+  "patchset": {
+    "load": "pyhf.PatchSet(json.load(open('patchset.json')))",
+    "access_by_name": "patchset['patch_name']",
+    "access_by_coords": "patchset[(m1, m2)]",
+    "apply_to_spec": "patchset.apply(spec, (m1, m2))",
+    "verify": "patchset.verify(spec)",
+    "attrs": ["description", "digests", "labels", "patches", "references", "version"]
+  },
+  "patch": {
+    "apply": "patch.apply(spec)"
+  },
+  "inference": {
+    "fit": "pyhf.infer.mle.fit(data, model, return_uncertainties=False)",
+    "fixed_poi_fit": "pyhf.infer.mle.fixed_poi_fit(poi_val, data, model, return_uncertainties=False, return_correlations=False)",
+    "hypotest": {
+      "signature": "pyhf.infer.hypotest(poi_val, data, model, test_stat='qtilde', calctype='asymptotics', return_expected_set=False, return_tail_probs=False, ntoys=1000, track_progress=False)",
+      "test_stat_options": ["q", "qtilde", "q0"],
+      "calctype_options": ["asymptotics", "toybased"]
+    },
+    "upper_limit": "pyhf.infer.intervals.upper_limits.upper_limit(data, model, scan, level=0.05, return_results=False)"
+  },
+  "backends": {
+    "set": "pyhf.set_backend(tensor_backend, optimizer)",
+    "tensor_backends": ["numpy", "pytorch", "tensorflow", "jax"],
+    "optimizers": ["scipy", "minuit"],
+    "note": "minuit required for return_uncertainties=True in mle.fit"
+  },
+  "utilities": {
+    "digest": "pyhf.utils.digest(spec)",
+    "download": "pyhf.contrib.utils.download(url, directory)",
+    "tensorlib_concatenate": "pyhf.tensorlib.concatenate([...])"
+  },
+  "table_columns": {
+    "total_bkg": "background estimate with combined uncertainties",
+    "data": "observed event count",
+    "xsec_fb": "visible cross-section = obs_limit / luminosity_ifb",
+    "s95_obs": "observed upper limit on signal events",
+    "s95_exp": "expected upper limit with ±1σ band",
+    "clb": "compatibility with 95% CL signal strength",
+    "p_s0": "background-only compatibility p-value with Z-score"
+  }
+}
