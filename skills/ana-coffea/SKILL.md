@@ -1,6 +1,6 @@
 ---
 name: ana-coffea
-description: Columnar HEP analysis with coffea — NanoEvents, ProcessorABC, accumulators, PackedSelection, Weights, corrections via correctionlib/lookup_tools/btag_tools/jetmet_tools, scaling with distributed executors (Dask, Parsl, TaskVine), dataset discovery via Rucio, ML inference integration, and full API reference for particle physics analyses.
+description: Columnar HEP event analysis with coffea — build physics analyses from NanoAOD: select physics objects (muons, electrons, jets), apply cutflows and event selections, compute invariant masses and kinematic variables, apply scale factors and systematic variations (JEC, b-tagging, pileup, lepton SFs), fill histograms with weighted events, and scale from laptop to distributed clusters (Dask, Parsl) without rewriting processor code.
 ---
 
 # Coffea Analysis Framework
