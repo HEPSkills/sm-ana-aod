@@ -59,7 +59,7 @@ variables = [...]
 
 ## References
 
-Read release, skim, defs, tree_name, variables, weight_variables from these files:
+Read release, skim, defs, tree_name, variables, weight_variables from related files:
 
 ```
 references/hbb_data.json

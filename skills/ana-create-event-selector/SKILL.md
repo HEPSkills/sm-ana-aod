@@ -97,7 +97,7 @@ def select_zero_leptons(data):
 
 ## References
 
-Read cuts from these files
+Read cuts from related files
 
 ```
 references/hbb_selections.json

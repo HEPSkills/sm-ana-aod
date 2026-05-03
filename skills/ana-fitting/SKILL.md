@@ -84,7 +84,7 @@ for s in samples:
 
 ## References
 
-Read fitting metadata from these files
+Read fitting metadata from related files
 
 ```
 references/hbb_fitting.json
