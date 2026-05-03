@@ -13,6 +13,11 @@ description: Statistical analysis with pyhf — HistFactory-based likelihood mod
 
 where θ = (μ, χ) combines the parameter of interest (signal strength μ) and nuisance parameters χ constrained by auxiliary data.
 
+Key design goals:
+- Declarative JSON-based model format (replaces ROOT/XML, schema-validated via JSON Schema draft-06)
+- Backend-agnostic tensor math: supports numpy, pytorch, tensorflow, jax
+- Long-term preservation and reinterpretation via HEPData / INSPIRE
+
 Core objects:
 
 | Object | Role |
@@ -41,6 +46,44 @@ Backends and optimisers are set globally:
 pyhf.set_backend("numpy", "scipy")   # default
 pyhf.set_backend("numpy", "minuit")  # required for return_uncertainties=True
 ```
+
+---
+
+## Likelihood Specification (JSON HistFactory)
+
+A **workspace** JSON contains three top-level keys:
+
+### channels
+
+Each channel is an analysis region with named samples. Each sample has:
+- `data`: array of nominal event rates per bin
+- `modifiers`: list of `{name, type, data}` modifier objects
+
+### measurements
+
+Defines the POI and per-parameter config (`inits`, `bounds`, `fixed`, `auxdata`, `sigmas`).
+
+### observations
+
+Observed bin counts per channel (auxiliary data is derived automatically).
+
+### Modifier Types
+
+| Type | Key | Description | Constraint | Data |
+|---|---|---|---|---|
+| `normfactor` | unconstrained normalisation | free multiplicative μ per sample (common POI) | none | `null` |
+| `normsys` | normalisation uncertainty | interpolates between `hi`/`lo` scale factors, κ(0)=1 | Gaussian | `{hi, lo}` floats |
+| `histosys` | correlated shape | interpolates between `hi_data`/`lo_data` absolute bin arrays | Gaussian | `{hi_data, lo_data}` |
+| `shapesys` | uncorrelated shape | bin-wise γ from relative uncertainties; bins with zero nominal/uncertainty fixed to 1 | Poisson | array of absolute uncertainties |
+| `staterror` | MC stat uncertainty | bin-wise γ_cb, σ_cb = √(Σδ²)/Σν⁰ from MC sample yields | Gaussian | array of absolute uncertainties |
+| `lumi` | luminosity | global scale from lumi uncertainty in measurement config | Gaussian | `null` |
+| `shapefactor` | data-driven shape | free bin-wise multiplicative parameters (e.g. multijet) | none | `null` |
+
+**Parameter sharing**: modifiers with the same `name` share the same parameter set — enabling correlated shape+norm variation from a single parameter.
+
+### Interpolation
+
+Correlated modifiers (`normsys`, `histosys`) use interpolating functions evaluated at α = ±1 (up/down variations). Several interpolation codes exist (see `references/interpolation_codes.md`).
 
 ---
 
@@ -208,6 +251,14 @@ Visible cross-section: `obs_limit / luminosity_ifb` [fb].
 
 ## References
 
-```
-references/pyhf_api.json
-```
+- `references/pyhf_api.json` — full Python API quick-reference
+- `references/shapefactor_example.md` — ShapeFactor example notebook
+- `references/hello_world_example.md` — Two-bin counting experiment example
+- `references/multibin_pois_example.md` — Multi-bin Poisson example
+- `references/multichannel_histo_example.md` — Multibin Coupled HistoSys example
+- `references/toys_example.md` — Running Monte Carlo simulations (toys)
+- `references/interpolation_codes.md` — Piecewise Linear Interpolation
+- `references/tensorizing_interpolations.md` — Tensorizing Interpolators
+- `references/test_statistics.md` — Empirical Test Statistics
+- `references/using_calculators.md` — Using Calculators
+- `references/statistical_analysis.md` — Binned HEP Statistical Analysis in Python

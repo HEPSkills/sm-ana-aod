@@ -2,14 +2,18 @@
   "model_creation": {
     "simple": {
       "uncorrelated_background": "pyhf.simplemodels.uncorrelated_background(signal, bkg, bkg_uncertainty)",
-      "note": "generates single multi-bin channel; signal strength mu is the POI; one gamma nuisance per bin"
+      "correlated_background": "pyhf.simplemodels.correlated_background(signal, bkg, bkg_up, bkg_down)",
+      "note": "uncorrelated_background: single multi-bin channel, one Poisson-constrained shapesys per bin; correlated_background: single channel with histosys modifier"
     },
+    "direct": "pyhf.Model(spec)",
     "from_workspace": {
       "load": "pyhf.Workspace(spec)",
       "build_model": "ws.model()",
       "build_model_with_patch": "ws.model(patches=[patch])",
-      "build_model_batched": "ws.model(batch_size=npars)"
-    }
+      "build_model_batched": "ws.model(batch_size=npars)",
+      "build_model_bonly": "ws.model(poi_name=None)"
+    },
+    "from_xml": "pyhf.readxml.parse(config_xml_path, root_dir)  # returns spec dict"
   },
   "model_config": {
     "parameters": "model.config.parameters",
@@ -20,7 +24,9 @@
     "poi_index": "model.config.poi_index",
     "par_slice": "model.config.par_slice(k)",
     "param_set": "model.config.param_set(k)",
-    "auxdata": "model.config.auxdata"
+    "auxdata": "model.config.auxdata",
+    "channels": "model.config.channels",
+    "samples": "model.config.samples"
   },
   "param_set_attrs": {
     "constrained": "model.config.param_set(k).constrained",
@@ -31,7 +37,8 @@
     "full": "model.expected_data(pars)",
     "actual_only": "model.expected_actualdata(pars)",
     "aux_only": "model.expected_auxdata(pars)",
-    "logpdf": "model.logpdf(pars, data)"
+    "logpdf": "model.logpdf(pars, data)",
+    "make_pdf": "model.make_pdf(pyhf.tensorlib.astensor(pars))"
   },
   "workspace": {
     "data_with_aux": "ws.data(model)",
@@ -57,26 +64,101 @@
     "apply": "patch.apply(spec)"
   },
   "inference": {
-    "fit": "pyhf.infer.mle.fit(data, model, return_uncertainties=False)",
-    "fixed_poi_fit": "pyhf.infer.mle.fixed_poi_fit(poi_val, data, model, return_uncertainties=False, return_correlations=False)",
+    "fit": "pyhf.infer.mle.fit(data, model, init_pars=None, par_bounds=None, fixed_params=None, return_uncertainties=False)",
+    "fixed_poi_fit": "pyhf.infer.mle.fixed_poi_fit(poi_val, data, model, init_pars=None, par_bounds=None, fixed_params=None, return_uncertainties=False, return_correlations=False)",
+    "twice_nll": "pyhf.infer.mle.twice_nll(pars, data, model)",
     "hypotest": {
-      "signature": "pyhf.infer.hypotest(poi_val, data, model, test_stat='qtilde', calctype='asymptotics', return_expected_set=False, return_tail_probs=False, ntoys=1000, track_progress=False)",
+      "signature": "pyhf.infer.hypotest(poi_val, data, model, test_stat='qtilde', calctype='asymptotics', return_expected=False, return_expected_set=False, return_tail_probs=False, ntoys=1000, track_progress=False)",
       "test_stat_options": ["q", "qtilde", "q0"],
-      "calctype_options": ["asymptotics", "toybased"]
+      "calctype_options": ["asymptotics", "toybased"],
+      "returns": {
+        "default": "CLs_obs",
+        "return_expected": "(CLs_obs, CLs_exp_median)",
+        "return_expected_set": "(CLs_obs, [CLs_-2s, CLs_-1s, CLs_med, CLs_+1s, CLs_+2s])",
+        "return_tail_probs": "(CLs_obs, (p_sb, p_b))"
+      }
     },
-    "upper_limit": "pyhf.infer.intervals.upper_limits.upper_limit(data, model, scan, level=0.05, return_results=False)"
+    "upper_limit": "pyhf.infer.intervals.upper_limits.upper_limit(data, model, scan, level=0.05, return_results=False)",
+    "toms748_scan": "pyhf.infer.intervals.upper_limits.toms748_scan(data, model, bounds_low, bounds_high, level=0.05)",
+    "linear_grid_scan": "pyhf.infer.intervals.upper_limits.linear_grid_scan(data, model, scan, level=0.05)"
+  },
+  "test_statistics": {
+    "q0": "pyhf.infer.test_statistics.q0(poi_test, data, model, init_pars, par_bounds, fixed_params)",
+    "qmu": "pyhf.infer.test_statistics.qmu(poi_test, data, model, init_pars, par_bounds, fixed_params)",
+    "qmu_tilde": "pyhf.infer.test_statistics.qmu_tilde(poi_test, data, model, init_pars, par_bounds, fixed_params)",
+    "tmu": "pyhf.infer.test_statistics.tmu(poi_test, data, model, init_pars, par_bounds, fixed_params)",
+    "tmu_tilde": "pyhf.infer.test_statistics.tmu_tilde(poi_test, data, model, init_pars, par_bounds, fixed_params)",
+    "get_test_stat": "pyhf.infer.utils.get_test_stat(name)  # name: 'q', 'qtilde', 'q0'"
+  },
+  "calculators": {
+    "asymptotic": "pyhf.infer.calculators.AsymptoticCalculator(data, model, test_stat='qtilde')",
+    "toy": "pyhf.infer.calculators.ToyCalculator(data, model, test_stat='qtilde', ntoys=1000, par_bounds=None)",
+    "factory": "pyhf.infer.utils.create_calculator('asymptotics'|'toybased', data, model, test_stat='qtilde', ntoys=1000)",
+    "api": {
+      "teststatistic": "calc.teststatistic(poi_test)  # observed q",
+      "distributions": "sb_dist, b_dist = calc.distributions(poi_test)",
+      "pvalues": "(p_sb, p_b, CLs) = calc.pvalues(q_obs, sb_dist, b_dist)",
+      "expected_pvalues": "(exp_p_sb, exp_p_b, exp_CLs) = calc.expected_pvalues(sb_dist, b_dist)",
+      "generate_asimov": "pyhf.infer.calculators.generate_asimov_data(poi_val, data, model, ...)"
+    },
+    "distribution_api": {
+      "samples": "dist.samples  # tensor of toy test stat values",
+      "p_value": "dist.p_value(q_obs)  # fraction of toys >= q_obs"
+    }
+  },
+  "distributions": {
+    "Normal": "pyhf.Normal(loc, scale)",
+    "Poisson": "pyhf.Poisson(rate)",
+    "Independent": "pyhf.Independent(dist)",
+    "Simultaneous": "pyhf.Simultaneous([dist1, dist2])",
+    "sample": "pdf.sample((n_samples,))  # shape: (n_samples, n_bins)"
   },
   "backends": {
     "set": "pyhf.set_backend(tensor_backend, optimizer)",
+    "get": "pyhf.get_backend()",
     "tensor_backends": ["numpy", "pytorch", "tensorflow", "jax"],
     "optimizers": ["scipy", "minuit"],
-    "note": "minuit required for return_uncertainties=True in mle.fit"
+    "notes": {
+      "minuit_required": "return_uncertainties=True in mle.fit requires minuit",
+      "gpu": "pytorch/tensorflow/jax enable GPU acceleration"
+    }
+  },
+  "tensorlib": {
+    "concatenate": "pyhf.tensorlib.concatenate([t1, t2])",
+    "astensor": "pyhf.tensorlib.astensor(array)",
+    "einsum": "pyhf.tensorlib.einsum('il,ik,kl->l', a, b, c)"
+  },
+  "modifier_types": {
+    "normfactor":  {"constraint": "none",    "data": "null",                          "description": "free multiplicative scale (common POI)"},
+    "normsys":     {"constraint": "Gaussian","data": "{hi: float, lo: float}",        "description": "normalisation uncertainty, κ(0)=1"},
+    "histosys":    {"constraint": "Gaussian","data": "{hi_data: [...], lo_data: [...]}", "description": "correlated shape (absolute bin arrays)"},
+    "shapesys":    {"constraint": "Poisson", "data": "[abs_uncertainty_per_bin]",     "description": "uncorrelated bin-wise shape"},
+    "staterror":   {"constraint": "Gaussian","data": "[abs_uncertainty_per_bin]",     "description": "MC statistical uncertainty"},
+    "lumi":        {"constraint": "Gaussian","data": "null",                          "description": "luminosity scaling"},
+    "shapefactor": {"constraint": "none",    "data": "null",                          "description": "free bin-wise scale (data-driven shape)"}
+  },
+  "interpolation_codes": {
+    "code0": "piecewise-linear",
+    "code1": "piecewise-exponential",
+    "code2": "quadratic interpolation, linear extrapolation",
+    "code4": "polynomial interpolation, exponential extrapolation",
+    "code4p": "piecewise-linear with polynomial for |alpha| < 1"
   },
   "utilities": {
-    "digest": "pyhf.utils.digest(spec)",
+    "digest": "pyhf.utils.digest(spec)  # SHA256 hash for workspace integrity",
+    "citation": "pyhf.utils.citation()  # BibTeX string",
+    "validate": "pyhf.schema.validate(spec, schema_name)",
+    "load_schema": "pyhf.schema.load_schema(path)",
     "download": "pyhf.contrib.utils.download(url, directory)",
-    "tensorlib_concatenate": "pyhf.tensorlib.concatenate([...])"
+    "brazil_plot": "from pyhf.contrib.viz import brazil; brazil.plot_results(poi_tests, tests, test_size=0.05, ax=ax)"
   },
+  "exceptions": [
+    "InvalidMeasurement", "InvalidNameReuse", "InvalidSpecification",
+    "InvalidPatchSet", "InvalidPatchLookup", "PatchSetVerificationError",
+    "InvalidWorkspaceOperation", "InvalidModel", "InvalidModifier",
+    "InvalidInterpCode", "ImportBackendError", "InvalidBackend",
+    "InvalidOptimizer", "InvalidPdfParameters", "InvalidPdfData"
+  ],
   "table_columns": {
     "total_bkg": "background estimate with combined uncertainties",
     "data": "observed event count",
